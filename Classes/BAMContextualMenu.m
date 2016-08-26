@@ -354,6 +354,35 @@
 	}
 }
 
+- (void) updateMenu:(BOOL) show
+{
+	if (_menuIsShowing) {
+		if (currentlyHighlightedMenuItem) {
+			CGPoint originalCenter = [self calculateCenterForMenuItemAtIndex:[contextualMenuItems indexOfObject:currentlyHighlightedMenuItem] withCircleRadius:menuItemsCenterRadius];
+			[self animateMenuItem:currentlyHighlightedMenuItem atIndex:currentlyHighlightedMenuItemIndex toPoint:originalCenter highlighted:NO];
+		}
+		currentlyHighlightedMenuItem = nil;
+		currentlyHighlightedMenuItemIndex = NSNotFound;
+		
+		[self showMenuItems:NO completion:nil];
+	}
+	
+	shouldRelayoutSubviews = YES;
+	[self layoutMenuItemsIfNeeded];
+	
+	if (show) {
+		shadowView.frame = rootView.bounds;
+		startCircleView.hidden = NO;
+		[self layoutMenuItemsIfNeeded];
+		
+		currentStatusBarHeight = ([[UIApplication sharedApplication] isStatusBarHidden]) ? 0.0 : [[UIApplication sharedApplication] statusBarFrame].size.height;
+		[rootView addSubview:shadowView];
+		[rootView bringSubviewToFront:shadowView];
+		[self showMenuItems:YES completion:nil];
+	}
+	
+}
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
 	if (self.activateOption == kBAMContextualMenuActivateOptionTouchUp || self.activateOption == kBAMContextualMenuActivateOptionBoth) {

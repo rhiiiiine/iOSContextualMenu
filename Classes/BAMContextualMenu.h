@@ -45,6 +45,7 @@ typedef enum HMContextualMenuActivateOption : NSUInteger {
 
 //This will tear down all subviews will calling all implemented data source and delegate methods.
 - (void)reloadDataAndRelayoutSubviews;
+- (void)updateMenu:(BOOL)show;
 
 /**
  Adds Contextual Menu
